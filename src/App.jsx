@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const [guestName, setGuestName] = useState('Sz. P. Wspaniałych Gości');
-  const [envelopePhase, setEnvelopePhase] = useState('closed'); // 'closed' -> 'opening' -> 'done'
+  const [envelopePhase, setEnvelopePhase] = useState('closed'); 
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -23,7 +23,6 @@ function App() {
     if (envelopePhase !== 'closed') return;
     setEnvelopePhase('opening');
     
-    // Zdejmujemy kopertę i ładujemy główny widok (nieco szybciej)
     setTimeout(() => {
       setEnvelopePhase('done');
     }, 2200); 
@@ -37,12 +36,10 @@ function App() {
   return (
     <div className="min-h-screen font-serif text-ink bg-[#f2efe9] overflow-hidden relative flex flex-col items-center justify-center">
       
-      {/* mode="wait" upewnia się, że koperta zniknie całkowicie ZANIM pojawi się zaproszenie */}
       <AnimatePresence mode="wait">
         
         {envelopePhase !== 'done' ? (
           
-          /* --- WIDOK KOPERTY --- */
           <motion.div 
             key="envelope-view"
             className="w-full h-screen absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#f2efe9]"
@@ -56,11 +53,11 @@ function App() {
                   <div className="absolute bottom-0 w-full h-[150px] bg-[#d5c5b3]" style={{ clipPath: 'polygon(0 100%, 50% 0, 100% 100%)' }}></div>
                </div>
 
-               {/* Karta wysuwająca się z koperty */}
+               {/* NAPRAWIONA KARTA WYSUWAJĄCA SIĘ Z KOPERTY */}
                <motion.div 
-                 className="absolute left-1/2 top-2 w-[310px] h-[220px] bg-paper-white -translate-x-1/2 rounded-sm shadow-md flex flex-col items-center justify-center p-4 border-[8px] border-[#dcd7ce]"
-                 initial={{ y: 0 }}
-                 animate={{ y: envelopePhase === 'opening' ? -180 : 0, opacity: envelopePhase === 'opening' ? [1, 1, 0] : 1 }}
+                 className="absolute left-1/2 top-2 w-[310px] h-[220px] bg-paper-white rounded-sm shadow-md flex flex-col items-center justify-center p-4 border-[8px] border-[#dcd7ce]"
+                 initial={{ x: "-50%", y: 0 }} 
+                 animate={{ x: "-50%", y: envelopePhase === 'opening' ? -180 : 0, opacity: envelopePhase === 'opening' ? [1, 1, 0] : 1 }}
                  transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
                >
                  <h1 className="font-calligraphy text-4xl text-ink text-center leading-tight">Marcelina <br/> & <br/> Bartłomiej</h1>
@@ -83,13 +80,12 @@ function App() {
                >
                   <div className="w-full h-full bg-[#ebdcd0]" style={{ clipPath: 'polygon(0 0, 100% 0, 50% 100%)' }}></div>
                   
-                  {/* Złoty lak (Pieczęć) - Ciemniejsza, w kolorze starego złota/brązu */}
+                  {/* Złoty lak (Pieczęć) */}
                   <motion.div 
                     className="absolute left-1/2 bottom-[5px] -translate-x-1/2 translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-[#9c7835] via-[#75551c] to-[#4d360e] border-[1px] border-[#362406] shadow-[0_4px_10px_rgba(0,0,0,0.3)] flex items-center justify-center group-hover:scale-105 transition-transform"
                     animate={{ opacity: envelopePhase === 'opening' ? 0 : 1 }}
                     transition={{ duration: 0.2 }}
                   >
-                     {/* Wewnętrzna obwódka pieczęci */}
                      <div className="absolute inset-[3px] rounded-full border border-[#c9aa71]/30"></div>
                      <span className="font-calligraphy text-2xl text-[#f2e1c2] drop-shadow-md tracking-widest pl-1">MB</span>
                   </motion.div>
@@ -107,7 +103,6 @@ function App() {
 
         ) : (
 
-          /* --- WIDOK ZAPROSZENIA (ŁADUJE SIĘ DOPIERO GDY KOPERTA ZNIKNIE) --- */
           <motion.div
              key="card-view"
              className="w-full min-h-screen py-12 px-4 flex flex-col items-center justify-center"
